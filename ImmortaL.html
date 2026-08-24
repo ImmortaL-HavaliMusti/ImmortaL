@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ImmortaL | Bedrock</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 20% 10%, #4c1d95 0%, transparent 30%),
+        radial-gradient(circle at 80% 90%, #701a75 0%, transparent 30%),
+        #020617;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+.glass {
+    background: rgba(15, 23, 42, .90);
+    border: 1px solid rgba(139, 92, 246, .20);
+    backdrop-filter: blur(15px);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, .85);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal.active {
+    display: flex;
+}
+
+input {
+    width: 100%;
+    background: #020617;
+    border: 1px solid #334155;
+    color: white;
+    border-radius: 12px;
+    padding: 13px;
+    margin-top: 6px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #8b5cf6;
+}
+
+button {
+    transition: .2s;
+}
+
+button:hover {
+    transform: translateY(-1px);
+}
+
+.card {
+    background: rgba(15, 23, 42, .85);
+    border: 1px solid #1e293b;
+    border-radius: 20px;
+    padding: 24px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<header class="border-b border-slate-800 bg-slate-950/80">
+
+<div class="max-w-6xl mx-auto px-5 py-4 flex justify-between items-center">
+
+    <div class="flex items-center gap-3">
+
+        <!-- ÖLÜMSÜZLÜK TOTEMİ -->
+
+        <div class="w-12 h-12 rounded-xl
+                    bg-yellow-950
+                    border border-yellow-700
+                    flex items-center justify-center">
+
+            <img
+                src="https://minecraft.wiki/images/Totem_of_Undying_JE2_BE2.png"
+                class="w-10 h-10 object-contain"
+                alt="Totem"
+            >
+
+        </div>
+
+        <div>
+            <div class="text-xl font-black text-purple-400">
+                ImmortaL
+            </div>
+
+            <div class="text-xs text-slate-500">
+                Bedrock Network
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="flex gap-2">
+
+        <button
+            id="loginOpen"
+            class="bg-purple-600 hover:bg-purple-500
+                   px-4 py-2 rounded-xl font-bold"
+        >
+            Giriş / Kayıt
+        </button>
+
+        <button
+            id="logoutBtn"
+            class="hidden bg-red-600 hover:bg-red-500
+                   px-4 py-2 rounded-xl font-bold"
+        >
+            Çıkış
+        </button>
+
+    </div>
+
+</div>
+
+</header>
+
+
+<!-- ANA SAYFA -->
+
+<main class="max-w-6xl mx-auto px-5 py-20">
+
+<section class="text-center">
+
+    <div class="inline-block
+                bg-purple-500/10
+                border border-purple-500/20
+                text-purple-300
+                px-4 py-2
+                rounded-full
+                text-sm mb-5">
+
+        MINECRAFT BEDROCK NETWORK
+
+    </div>
+
+
+    <h1 class="text-5xl md:text-7xl font-black">
+
+        IMMORTA<span class="text-purple-500">L</span>
+
+    </h1>
+
+
+    <p class="text-slate-400 text-lg mt-5">
+
+        ImmortaL Bedrock dünyasına hoş geldin.
+
+    </p>
+
+
+    <div class="flex flex-wrap justify-center gap-3 mt-8">
+
+        <button
+            id="howOpen"
+            class="bg-slate-800 hover:bg-slate-700
+                   px-6 py-3 rounded-xl font-bold"
+        >
+            Nasıl Girilir?
+        </button>
+
+        <button
+            id="joinOpen"
+            class="bg-purple-600 hover:bg-purple-500
+                   px-6 py-3 rounded-xl font-bold"
+        >
+            Sunucuya Katıl
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- ÖZELLİKLER -->
+
+<section class="grid md:grid-cols-3 gap-5 mt-16">
+
+    <div class="card">
+
+        <div class="text-4xl">⛏️</div>
+
+        <h2 class="text-xl font-bold mt-4">
+            Bedrock
+        </h2>
+
+        <p class="text-slate-400 text-sm mt-2">
+            Minecraft Bedrock oyuncuları için ImmortaL.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="text-4xl">🎮</div>
+
+        <h2 class="text-xl font-bold mt-4">
+            Xbox
+        </h2>
+
+        <p class="text-slate-400 text-sm mt-2">
+            Xbox üzerinden dünyaya katılabilirsin.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="text-4xl">👑</div>
+
+        <h2 class="text-xl font-bold mt-4">
+            Oyuncular
+        </h2>
+
+        <p class="text-slate-400 text-sm mt-2">
+            Hesap oluştur ve ImmortaL topluluğuna katıl.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- HESAP -->
+
+<section
+    id="accountPanel"
+    class="hidden card mt-10"
+>
+
+    <div class="flex justify-between items-center flex-wrap gap-4">
+
+        <div>
+
+            <div class="text-xs text-slate-500">
+                Giriş yapan
+            </div>
+
+            <div
+                id="accountName"
+                class="text-3xl font-black"
+            >
+                -
+            </div>
+
+        </div>
+
+
+        <div
+            id="accountRole"
+            class="px-4 py-2 rounded-full font-bold"
+        >
+            -
+        </div>
+
+    </div>
+
+
+    <!-- ADMIN -->
+
+    <div
+        id="adminPanel"
+        class="hidden mt-7
+               border-t border-slate-800
+               pt-6"
+    >
+
+        <h2 class="text-2xl font-black text-yellow-400">
+            👑 Admin Paneli
+        </h2>
+
+        <p class="text-slate-400 mt-2">
+            HavaliMusti yönetici olarak giriş yaptı.
+        </p>
+
+        <div class="mt-5
+                    bg-yellow-500/5
+                    border border-yellow-500/20
+                    rounded-xl p-4">
+
+            <b class="text-yellow-400">
+                ADMIN
+            </b>
+
+            <p class="text-sm text-slate-400 mt-2">
+                Oyuncu yönetimi ve sunucu özellikleri
+                burada kullanılabilir.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- NASIL GİRİLİR -->
+
+<div id="howModal" class="modal">
+
+<div class="glass rounded-3xl p-7 w-full max-w-lg">
+
+    <div class="flex justify-between items-center">
+
+        <h2 class="text-2xl font-black text-purple-400">
+            Nasıl Girilir?
+        </h2>
+
+        <button id="howClose"
+                class="text-slate-400 text-xl">
+            ✕
+        </button>
+
+    </div>
+
+
+    <div class="mt-5
+                bg-slate-950
+                border border-slate-800
+                rounded-xl p-5">
+
+        <div class="text-lg font-bold">
+            🎮 Xbox / Minecraft Bedrock
+        </div>
+
+        <p class="text-slate-300 mt-4 leading-7">
+
+            Xbox / Minecraft Bedrock'tan
+
+            <span class="text-purple-400 font-bold">
+                HavaliMusti
+            </span>
+
+            yi arkadaş ekle ve dünyasına katıl.
+
+        </p>
+
+    </div>
+
+
+    <div class="mt-4
+                bg-slate-950
+                border border-slate-800
+                rounded-xl p-5">
+
+        <div class="font-bold">
+            ℹ️ Not
+        </div>
+
+        <p class="text-slate-400 text-sm mt-2">
+            HavaliMusti başka bir dünyada oynuyor olabilir.
+            O da insan demi? 😄
+        </p>
+
+    </div>
+
+
+    <button
+        id="howClose2"
+        class="w-full mt-5
+               bg-purple-600
+               hover:bg-purple-500
+               py-3 rounded-xl font-bold"
+    >
+        Anladım
+    </button>
+
+</div>
+
+</div>
+
+
+<!-- GİRİŞ / KAYIT -->
+
+<div id="authModal" class="modal">
+
+<div class="glass rounded-3xl p-7 w-full max-w-md">
+
+    <div class="flex justify-between items-center">
+
+        <div>
+
+            <h2 class="text-2xl font-black">
+                ImmortaL
+            </h2>
+
+            <p class="text-xs text-slate-500">
+                Hesabına giriş yap
+            </p>
+
+        </div>
+
+        <button
+            id="authClose"
+            class="text-slate-400 text-xl"
+        >
+            ✕
+        </button>
+
+    </div>
+
+
+    <!-- SEKME -->
+
+    <div class="grid grid-cols-2 gap-2 mt-6">
+
+        <button
+            id="loginTab"
+            class="bg-purple-600 py-2 rounded-xl font-bold"
+        >
+            Giriş
+        </button>
+
+        <button
+            id="registerTab"
+            class="bg-slate-800 py-2 rounded-xl font-bold"
+        >
+            Kayıt
+        </button>
+
+    </div>
+
+
+    <!-- KULLANICI ADI -->
+
+    <div id="usernameBox" class="hidden mt-5">
+
+        <label class="text-sm text-slate-400">
+            Kullanıcı Adı
+        </label>
+
+        <input
+            id="username"
+            type="text"
+            placeholder="HavaliMusti"
+        >
+
+    </div>
+
+
+    <!-- EMAIL -->
+
+    <div class="mt-5">
+
+        <label class="text-sm text-slate-400">
+            E-posta
+        </label>
+
+        <input
+            id="email"
+            type="text"
+            inputmode="email"
+            autocomplete="email"
+            maxlength="254"
+            placeholder="ornek@mail.com"
+        >
+
+    </div>
+
+
+    <!-- ŞİFRE -->
+
+    <div class="mt-4">
+
+        <label class="text-sm text-slate-400">
+            Şifre
+        </label>
+
+        <input
+            id="password"
+            type="password"
+            autocomplete="new-password"
+            maxlength="72"
+            placeholder="En az 8 karakter"
+        >
+
+    </div>
+
+
+    <button
+        id="authBtn"
+        class="w-full mt-6
+               bg-purple-600
+               hover:bg-purple-500
+               py-3 rounded-xl font-bold"
+    >
+        Giriş Yap
+    </button>
+
+
+    <div
+        id="message"
+        class="text-center
+               text-sm
+               text-slate-400
+               mt-4"
+    ></div>
+
+</div>
+
+</div>
+
+
+<!-- FOOTER -->
+
+<footer
+    class="border-t border-slate-900
+           text-center text-xs
+           text-slate-600 py-7"
+>
+
+© 2026 ImmortaL Network
+
+</footer>
+
+
+<script>
+
+/* ==========================================
+   SUPABASE
+========================================== */
+
+const SUPABASE_URL =
+    "https://kphdxpscsjbjtdtstlow.supabase.co";
+
+
+/*
+  
+*/
+
+const SUPABASE_KEY = "sb_publishable_2eoVbj4Eg-V5KZIBQv1IYA_LuTcKcDy";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+/* ==========================================
+   DEĞİŞKEN
+========================================== */
+
+let registerMode = false;
+
+
+/* ==========================================
+   ELEMENTLER
+========================================== */
+
+const authModal =
+    document.getElementById("authModal");
+
+const howModal =
+    document.getElementById("howModal");
+
+const usernameBox =
+    document.getElementById("usernameBox");
+
+const loginTab =
+    document.getElementById("loginTab");
+
+const registerTab =
+    document.getElementById("registerTab");
+
+const authBtn =
+    document.getElementById("authBtn");
+
+const message =
+    document.getElementById("message");
+
+
+/* ==========================================
+   MODALLAR
+========================================== */
+
+function openAuth() {
+    authModal.classList.add("active");
+}
+
+function closeAuth() {
+    authModal.classList.remove("active");
+}
+
+function openHow() {
+    howModal.classList.add("active");
+}
+
+function closeHow() {
+    howModal.classList.remove("active");
+}
+
+
+document
+    .getElementById("loginOpen")
+    .onclick = openAuth;
+
+document
+    .getElementById("joinOpen")
+    .onclick = openAuth;
+
+document
+    .getElementById("authClose")
+    .onclick = closeAuth;
+
+document
+    .getElementById("howOpen")
+    .onclick = openHow;
+
+document
+    .getElementById("howClose")
+    .onclick = closeHow;
+
+document
+    .getElementById("howClose2")
+    .onclick = closeHow;
+
+
+/* ==========================================
+   GİRİŞ SEKMESİ
+========================================== */
+
+loginTab.onclick = function () {
+
+    registerMode = false;
+
+    usernameBox.classList.add("hidden");
+
+    loginTab.className =
+        "bg-purple-600 py-2 rounded-xl font-bold";
+
+    registerTab.className =
+        "bg-slate-800 py-2 rounded-xl font-bold";
+
+    authBtn.textContent =
+        "Giriş Yap";
+
+    message.textContent = "";
+
+};
+
+
+/* ==========================================
+   KAYIT SEKMESİ
+========================================== */
+
+registerTab.onclick = function () {
+
+    registerMode = true;
+
+    usernameBox.classList.remove("hidden");
+
+    registerTab.className =
+        "bg-purple-600 py-2 rounded-xl font-bold";
+
+    loginTab.className =
+        "bg-slate-800 py-2 rounded-xl font-bold";
+
+    authBtn.textContent =
+        "Kayıt Ol";
+
+    message.textContent = "";
+
+};
+
+
+/* ==========================================
+   PROFİLİ GETİR
+========================================== */
+
+async function loadProfile(user) {
+
+    const result =
+        await supabaseClient
+            .from("profiles")
+            .select("username, role")
+            .eq("id", user.id)
+            .single();
+
+
+    if (result.error) {
+
+        console.error(result.error);
+
+        return;
+
+    }
+
+
+    const profile =
+        result.data;
+
+
+    document
+        .getElementById("accountPanel")
+        .classList.remove("hidden");
+
+
+    document
+        .getElementById("accountName")
+        .textContent =
+        profile.username;
+
+
+    const role =
+        document.getElementById("accountRole");
+
+
+    if (profile.role === "admin") {
+
+        role.textContent =
+            "ADMIN 👑";
+
+        role.className =
+            "px-4 py-2 rounded-full font-bold " +
+            "bg-yellow-500/10 text-yellow-400";
+
+
+        document
+            .getElementById("adminPanel")
+            .classList.remove("hidden");
+
+    } else {
+
+        role.textContent =
+            "OYUNCU 🎮";
+
+        role.className =
+            "px-4 py-2 rounded-full font-bold " +
+            "bg-purple-500/10 text-purple-300";
+
+
+        document
+            .getElementById("adminPanel")
+            .classList.add("hidden");
+
+    }
+
+
+    document
+        .getElementById("loginOpen")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById("logoutBtn")
+        .classList.remove("hidden");
+
+}
+
+
+/* ==========================================
+   GİRİŞ / KAYIT
+========================================== */
+
+authBtn.onclick = async function () {
+
+    const email =
+        document
+            .getElementById("email")
+            .value
+            .trim();
+
+    const password =
+        document
+            .getElementById("password")
+            .value;
+
+    const username =
+        document
+            .getElementById("username")
+            .value
+            .trim();
+
+
+    if (!email) {
+
+        message.textContent =
+            "❌ E-posta gir.";
+
+        return;
+
+    }
+
+    // Tarayıcının type=email sınırlarına takılmadan,
+    // Supabase'e göndermeden önce güvenli uzunluk/biçim kontrolü.
+    if (email.length > 254) {
+
+        message.textContent =
+            "❌ E-posta adresi çok uzun. En fazla 254 karakter olabilir.";
+
+        return;
+
+    }
+
+    const emailParts = email.split("@");
+
+    if (
+        emailParts.length !== 2 ||
+        !emailParts[0] ||
+        !emailParts[1] ||
+        emailParts[0].length > 64 ||
+        emailParts[1].length > 253 ||
+        !emailParts[1].includes(".")
+    ) {
+
+        message.textContent =
+            "❌ Geçerli bir e-posta adresi gir.";
+
+        return;
+
+    }
+
+
+    if (password.length < 8) {
+
+        message.textContent =
+            "❌ Şifre en az 8 karakter olmalı.";
+
+        return;
+
+    }
+
+
+    /* ======================================
+       KAYIT
+    ====================================== */
+
+    if (registerMode) {
+
+        if (username.length < 3) {
+
+            message.textContent =
+                "❌ Kullanıcı adı en az 3 karakter.";
+
+            return;
+
+        }
+
+
+        authBtn.disabled = true;
+
+        authBtn.textContent =
+            "Kayıt yapılıyor...";
+
+
+        const result =
+            await supabaseClient.auth.signUp({
+
+                email: email,
+
+                password: password,
+
+                options: {
+
+                    data: {
+
+                        username: username
+
+                    }
+
+                }
+
+            });
+
+
+        authBtn.disabled = false;
+
+        authBtn.textContent =
+            "Kayıt Ol";
+
+
+        if (result.error) {
+
+            message.textContent =
+                "❌ " + result.error.message;
+
+            return;
+
+        }
+
+
+        message.textContent =
+            "✅ Kayıt başarılı! " +
+            "E-posta doğrulaması gerekiyorsa mailini kontrol et.";
+
+        return;
+
+    }
+
+
+    /* ======================================
+       GİRİŞ
+    ====================================== */
+
+    authBtn.disabled = true;
+
+    authBtn.textContent =
+        "Giriş yapılıyor...";
+
+
+    const result =
+        await supabaseClient.auth.signInWithPassword({
+
+            email: email,
+
+            password: password
+
+        });
+
+
+    authBtn.disabled = false;
+
+    authBtn.textContent =
+        "Giriş Yap";
+
+
+    if (result.error) {
+
+        message.textContent =
+            "❌ " + result.error.message;
+
+        return;
+
+    }
+
+
+    message.textContent =
+        "✅ Giriş başarılı!";
+
+
+    await loadProfile(result.data.user);
+
+
+    setTimeout(
+        closeAuth,
+        600
+    );
+
+};
+
+
+/* ==========================================
+   ÇIKIŞ
+========================================== */
+
+document
+    .getElementById("logoutBtn")
+    .onclick = async function () {
+
+        await supabaseClient.auth.signOut();
+
+        document
+            .getElementById("accountPanel")
+            .classList.add("hidden");
+
+        document
+            .getElementById("adminPanel")
+            .classList.add("hidden");
+
+        document
+            .getElementById("loginOpen")
+            .classList.remove("hidden");
+
+        document
+            .getElementById("logoutBtn")
+            .classList.add("hidden");
+
+    };
+
+
+/* ==========================================
+   SAYFA AÇILINCA OTURUM
+========================================== */
+
+async function checkSession() {
+
+    const result =
+        await supabaseClient.auth.getSession();
+
+
+    if (result.data.session) {
+
+        await loadProfile(
+            result.data.session.user
+        );
+
+    }
+
+}
+
+
+checkSession();
+
+
+/* ==========================================
+   OTURUM DEĞİŞİKLİĞİ
+========================================== */
+
+supabaseClient.auth.onAuthStateChange(
+
+    async function (event, session) {
+
+        if (
+            event === "SIGNED_IN" &&
+            session
+        ) {
+
+            await loadProfile(
+                session.user
+            );
+
+        }
+
+    }
+
+);
+
+
+/* ==========================================
+   ESC
+========================================== */
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (event.key === "Escape") {
+
+            closeAuth();
+            closeHow();
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
