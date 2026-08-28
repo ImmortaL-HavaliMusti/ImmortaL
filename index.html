@@ -167,19 +167,11 @@ button:hover {
     </p>
 
     <div class="flex flex-wrap justify-center gap-3 mt-8">
-
-        <button
-            id="howOpen"
-            class="bg-slate-800 hover:bg-slate-700
-                   px-6 py-3 rounded-xl font-bold">
-            Nasıl Girilir?
-        </button>
-
-        <button
+<button
             id="joinOpen"
             class="bg-purple-600 hover:bg-purple-500
                    px-6 py-3 rounded-xl font-bold">
-            Sunucuya Katıl
+            Hesabını Bağla
         </button>
 
     </div>
@@ -306,168 +298,6 @@ button:hover {
 </section>
 
 </main>
-
-
-<!-- NASIL GİRİLİR -->
-
-<div id="howModal" class="modal">
-
-<div class="glass rounded-3xl p-7 w-full max-w-lg">
-
-    <div class="flex justify-between items-center">
-
-        <h2 class="text-2xl font-black text-purple-400">
-            Nasıl Girilir?
-        </h2>
-
-        <button
-            id="howClose"
-            class="text-slate-400 text-xl">
-            ✕
-        </button>
-
-    </div>
-
-
-    <!-- BEDROCK -->
-
-    <div class="mt-5
-                bg-slate-950
-                border border-slate-800
-                rounded-xl p-5">
-
-        <div class="text-lg font-bold">
-            🎮 Minecraft Bedrock
-        </div>
-
-        <p class="text-slate-300 mt-4 leading-7">
-
-            Minecraft Bedrock'ta
-            <span class="text-purple-400 font-bold">
-                Sunucular
-            </span>
-            bölümüne gir.
-
-            <br><br>
-
-            Ardından
-            <span class="text-purple-400 font-bold">
-                Sunucu Ekle
-            </span>
-            seçeneğine bas.
-
-        </p>
-
-    </div>
-
-
-    <!-- SUNUCU BİLGİLERİ -->
-
-    <div class="mt-4
-                bg-slate-950
-                border border-slate-800
-                rounded-xl p-5">
-
-        <div class="font-bold text-purple-400">
-            🌐 Sunucu Bilgileri
-        </div>
-
-        <div class="mt-4 space-y-4">
-
-            <div>
-                <div class="text-xs text-slate-500">
-                    Sunucu Adresi
-                </div>
-
-                <div class="text-white font-bold break-all">
-                    ImmortaLNetwork.aternos.me
-                </div>
-            </div>
-
-
-            <div>
-                <div class="text-xs text-slate-500">
-                    Bağlantı Noktası
-                </div>
-
-                <div class="text-white font-bold">
-                    15923
-                </div>
-            </div>
-
-
-            <div>
-                <div class="text-xs text-slate-500">
-                    Yazılım
-                </div>
-
-                <div class="text-green-400 font-bold">
-                    Bedrock
-                </div>
-            </div>
-
-
-            <div>
-                <div class="text-xs text-slate-500">
-                    Sürüm
-                </div>
-
-                <div class="text-white font-bold">
-                    1.26.44.3
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- BİLGİ -->
-
-    <div class="mt-4
-                bg-purple-500/5
-                border border-purple-500/20
-                rounded-xl p-5">
-
-        <div class="font-bold">
-            ℹ️ Bağlanma
-        </div>
-
-        <p class="text-slate-400 text-sm mt-2 leading-6">
-
-            Sunucu adresini ve bağlantı noktasını
-            Minecraft Bedrock'taki
-            <b class="text-purple-400">
-                Sunucu Ekle
-            </b>
-            bölümüne yaz.
-
-            <br><br>
-
-            Bilgileri kaydettikten sonra
-            ImmortaL sunucusuna bağlanabilirsin.
-
-        </p>
-
-    </div>
-
-
-    <button
-        id="howClose2"
-        class="w-full mt-5
-               bg-purple-600
-               hover:bg-purple-500
-               py-3 rounded-xl font-bold">
-
-        Anladım
-
-    </button>
-
-</div>
-
-</div>
-
-
 <!-- GİRİŞ / KAYIT -->
 
 <div id="authModal" class="modal">
@@ -633,10 +463,6 @@ let registerMode = false;
 
 const authModal =
     document.getElementById("authModal");
-
-const howModal =
-    document.getElementById("howModal");
-
 const usernameBox =
     document.getElementById("usernameBox");
 
@@ -665,14 +491,6 @@ function closeAuth() {
     authModal.classList.remove("active");
 }
 
-function openHow() {
-    howModal.classList.add("active");
-}
-
-function closeHow() {
-    howModal.classList.remove("active");
-}
-
 
 document
     .getElementById("loginOpen")
@@ -685,20 +503,6 @@ document
 document
     .getElementById("authClose")
     .onclick = closeAuth;
-
-document
-    .getElementById("howOpen")
-    .onclick = openHow;
-
-document
-    .getElementById("howClose")
-    .onclick = closeHow;
-
-document
-    .getElementById("howClose2")
-    .onclick = closeHow;
-
-
 /* ==========================================
    GİRİŞ SEKMESİ
 ========================================== */
@@ -935,8 +739,7 @@ authBtn.onclick = async function () {
 
 
         message.textContent =
-            "✅ Kayıt başarılı! " +
-            "E-posta doğrulaması gerekiyorsa mailini kontrol et.";
+            "✅ Kayıt başarılı!";
 
         return;
 
@@ -1082,7 +885,6 @@ document.addEventListener(
         if (event.key === "Escape") {
 
             closeAuth();
-            closeHow();
 
         }
 
