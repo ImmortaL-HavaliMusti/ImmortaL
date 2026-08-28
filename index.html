@@ -738,8 +738,37 @@ authBtn.onclick = async function () {
         }
 
 
-        message.textContent =
-            "✅ Kayıt başarılı!";
+        // Kayıt sonrası otomatik giriş
+        let session = result.data.session;
+
+        if (!session) {
+            const loginResult =
+                await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+            if (loginResult.error) {
+                message.textContent =
+                    "❌ Kayıt oldu fakat otomatik giriş yapılamadı: " +
+                    loginResult.error.message;
+                return;
+            }
+
+            session = loginResult.data.session;
+        }
+
+        if (session) {
+            message.textContent =
+                "✅ Kayıt başarılı! Otomatik giriş yapıldı.";
+
+            await loadProfile(session.user);
+
+            setTimeout(
+                closeAuth,
+                600
+            );
+        }
 
         return;
 
