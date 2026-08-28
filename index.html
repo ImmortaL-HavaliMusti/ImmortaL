@@ -8,6 +8,7 @@
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/skinview3d@3.2.0/bundles/skinview3d.bundle.js"></script>
 
 <style>
 * {
@@ -260,6 +261,45 @@ button:hover {
 
     </div>
 
+
+    <!-- OYUNCU SKİNİ -->
+    <div class="mt-7 border-t border-slate-800 pt-6">
+        <h2 class="text-2xl font-black text-purple-400">Oyuncun</h2>
+        <p class="text-slate-400 text-sm mt-2">Hesabında kullandığın oyuncu adı ve Bedrock skini.</p>
+
+        <div class="mt-5 bg-slate-950 border border-slate-800 rounded-2xl p-5">
+            <div id="playerIdentity" class="flex items-center justify-center gap-3 min-h-[64px]">
+                <img id="playerSpinner" src="spinner.gif" alt="Yükleniyor" class="w-10 h-10 object-contain hidden">
+                <img id="playerHead" alt="Oyuncu kafası" class="w-16 h-16 hidden rounded-lg" style="image-rendering:pixelated;">
+                <div id="playerNameResult" class="text-xl font-black">-</div>
+            </div>
+
+            <div id="skinStatus" class="text-center text-sm text-slate-400 mt-4">
+                Giriş yapıldığında oyuncu aranacak...
+            </div>
+
+            <div id="skinViews" class="hidden mt-6">
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 text-center">
+                        <div class="text-sm font-bold text-purple-300 mb-3">2D Kafa</div>
+                        <img id="skin2d" class="mx-auto w-32 h-32 object-contain" style="image-rendering:pixelated;" alt="2D kafa">
+                    </div>
+                    <div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 text-center">
+                        <div class="text-sm font-bold text-purple-300 mb-3">3D Kafa</div>
+                        <img id="skin3dHead" class="mx-auto w-32 h-32 object-contain" alt="3D kafa">
+                    </div>
+                    <div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 text-center">
+                        <div class="text-sm font-bold text-purple-300 mb-3">Full 3D Skin</div>
+                        <img id="skin3dBody" class="mx-auto w-40 h-48 object-contain" alt="Full 3D skin">
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-xs text-slate-500 mt-4 text-center">
+                Bedrock skin görselleri TAB Avatars üzerinden alınır. Varsayılan Steve/Alex sonucu gerçek skin olarak kabul edilmez.
+            </p>
+        </div>
+    </div>
 
     <!-- ADMIN -->
 
@@ -577,6 +617,8 @@ async function loadProfile(user) {
     const profile =
         result.data;
 
+    currentAuthUser = user;
+
 
     document
         .getElementById("accountPanel")
@@ -587,7 +629,6 @@ async function loadProfile(user) {
         .getElementById("accountName")
         .textContent =
         profile.username;
-
 
     const role =
         document.getElementById("accountRole");
@@ -624,6 +665,8 @@ async function loadProfile(user) {
     }
 
 
+    await showPlayerSkin(profile.username);
+
     document
         .getElementById("loginOpen")
         .classList.add("hidden");
@@ -636,9 +679,136 @@ async function loadProfile(user) {
 }
 
 
+
 /* ==========================================
-   GİRİŞ / KAYIT
+   BEDROCK / XBOX OYUNCU PROFİLİ
+   CraftMC Player Lookup
 ========================================== */
+let currentAuthUser = null;
+
+function setSkinStatus(text, cls = "text-slate-400") {
+    const el = document.getElementById("skinStatus");
+    if (!el) return;
+    el.className = `text-center text-sm mt-4 ${cls}`;
+    el.textContent = text;
+}
+
+function setSkinStatus(text, cls = "text-slate-400") {
+    const el = document.getElementById("skinStatus");
+    if (!el) return;
+    el.className = `text-center text-sm mt-4 ${cls}`;
+    el.textContent = text;
+}
+
+function skinUrl(username, type, size = 256) {
+    return `https://tabavatars.net/avatar/?username=${encodeURIComponent(username)}&platform=bedrock&type=${encodeURIComponent(type)}&size=${size}`;
+}
+
+function preloadImage(url) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = url;
+    });
+}
+
+async function showPlayerSkin(username) {
+    const playerUsername = String(username || "").trim();
+    if (!playerUsername) return;
+
+    const nameBox = document.getElementById("playerNameResult");
+    const head = document.getElementById("playerHead");
+    const spinner = document.getElementById("playerSpinner");
+    const views = document.getElementById("skinViews");
+
+    if (nameBox) nameBox.textContent = playerUsername;
+    if (head) {
+        head.classList.add("hidden");
+        head.removeAttribute("src");
+    }
+    if (views) views.classList.add("hidden");
+    if (spinner) spinner.classList.remove("hidden");
+
+    setSkinStatus("Oyuncu aranıyor...", "text-slate-400");
+
+    // İstediğin 3 saniyelik spinner.
+    await new Promise(resolve => setTimeout(resolve, 3000));
+
+    // TAB Avatars, Bedrock gamertag + platform=bedrock destekliyor.
+    // CraftMC sayfasını kazımıyoruz ve CAPTCHA istemiyoruz.
+    const headUrl = skinUrl(playerUsername, "helm", 128);
+    const isoHeadUrl = skinUrl(playerUsername, "head-iso", 256);
+    const isoBodyUrl = skinUrl(playerUsername, "body-iso", 512);
+    const rawSkinUrl = skinUrl(playerUsername, "skin");
+
+    try {
+        const [headImg, isoHeadImg, bodyImg] = await Promise.all([
+            preloadImage(headUrl),
+            preloadImage(isoHeadUrl),
+            preloadImage(isoBodyUrl)
+        ]);
+
+        if (!headImg.naturalWidth || !isoHeadImg.naturalWidth || !bodyImg.naturalWidth) {
+            throw new Error("Görsel yüklenemedi");
+        }
+
+        if (spinner) spinner.classList.add("hidden");
+
+        const playerHead = document.getElementById("playerHead");
+        const skin2d = document.getElementById("skin2d");
+        const skin3dHead = document.getElementById("skin3dHead");
+        const skin3dBody = document.getElementById("skin3dBody");
+
+        if (playerHead) {
+            playerHead.src = headUrl;
+            playerHead.classList.remove("hidden");
+        }
+        if (skin2d) skin2d.src = headUrl;
+        if (skin3dHead) skin3dHead.src = isoHeadUrl;
+        if (skin3dBody) skin3dBody.src = isoBodyUrl;
+        if (views) views.classList.remove("hidden");
+
+        setSkinStatus(
+            `✓ ${playerUsername} için Bedrock skin görselleri yüklendi.`,
+            "text-green-400 font-bold"
+        );
+
+        window.immortalSkin = {
+            username: playerUsername,
+            raw: rawSkinUrl,
+            head: headUrl,
+            isoHead: isoHeadUrl,
+            isoBody: isoBodyUrl
+        };
+    } catch (error) {
+        if (spinner) spinner.classList.add("hidden");
+        if (views) views.classList.add("hidden");
+        setSkinStatus(
+            `❌ ${playerUsername} için Bedrock skin görseli alınamadı.`,
+            "text-red-400 font-bold"
+        );
+        console.error("Bedrock skin error:", error);
+    }
+}
+
+function clearSkinViewer(messageText = "Giriş yaptığında Bedrock skinin burada görünecek.") {
+    const head = document.getElementById("playerHead");
+    const views = document.getElementById("skinViews");
+    const name = document.getElementById("playerNameResult");
+    const spinner = document.getElementById("playerSpinner");
+
+    if (head) {
+        head.classList.add("hidden");
+        head.removeAttribute("src");
+    }
+    if (views) views.classList.add("hidden");
+    if (name) name.textContent = "";
+    if (spinner) spinner.classList.add("hidden");
+
+    setSkinStatus(messageText);
+    window.immortalSkin = null;
+}
 
 authBtn.onclick = async function () {
 
@@ -784,6 +954,10 @@ authBtn.onclick = async function () {
     authBtn.textContent =
         "Giriş yapılıyor...";
 
+    message.innerHTML =
+        '<img src="spinner.gif" alt="Yükleniyor" style="width:28px;height:28px;margin:0 auto 8px;display:block">' +
+        'Giriş yapılıyor...';
+
 
     const result =
         await supabaseClient.auth.signInWithPassword({
@@ -847,6 +1021,13 @@ document
         document
             .getElementById("loginOpen")
             .classList.remove("hidden");
+
+        currentAuthUser = null;
+        const playerName = document.getElementById("playerNameResult");
+        if (playerName) playerName.textContent = "";
+        setSkinStatus("Çıkış yapıldı.");
+        clearSkinViewer("Giriş yaptığında Bedrock skinin burada görünecek.");
+
 
         document
             .getElementById("logoutBtn")
